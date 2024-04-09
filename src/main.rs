@@ -15,9 +15,9 @@ struct ACompleteRecord {
     pub a_string: String,
 }
 
-const BATCH_SIZE: i32 = 1000;
+const BATCH_SIZE: usize = 1000;
 const INPUT_FILE: &str ="test.csv.gz";
-const OUTPUT_FILE: &str = "large_file.parquet"
+const OUTPUT_FILE: &str = "large_file.parquet";
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     // 打开 gzip 文件
@@ -49,7 +49,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             a_string:record.get(2).unwrap().to_string(),
         };
         rows.push(row);
-        println!("aaa");
+        // println!("aaa");
         if rows.len() == BATCH_SIZE {
             let mut row_group_writer = writer.next_row_group()?;
             rows.as_slice().write_to_row_group(&mut row_group_writer).unwrap();
@@ -59,7 +59,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     }
     if rows.len() != BATCH_SIZE {
         let mut row_group_writer = writer.next_row_group()?;
-        println!("len = {} {} {} {}", rows.len(), rows[1].a_int, rows[1].b_int, rows[1].a_string);
+        // println!("len = {} {} {} {}", rows.len(), rows[1].a_int, rows[1].b_int, rows[1].a_string);
         rows.as_slice().write_to_row_group(&mut row_group_writer).unwrap();
         row_group_writer.close()?;
         rows.clear();
